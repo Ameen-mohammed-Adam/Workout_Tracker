@@ -1,0 +1,27 @@
+{
+  "name": "idea1-workout-tracker",
+  "version": "1.0.0",
+  "description": "this is the first idea of the 3",
+  "license": "ISC",
+  "author": "Ameen Adam",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "dev": "tsx --watch-path . src/index.ts"
+  },
+  "dependencies": {
+    "@types/express": "^5.0.6",
+    "@types/mongoose": "^5.11.96",
+    "@types/bcrypt": "^6.0.0",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/node": "^25.7.0",
+    "bcrypt": "^6.0.0",
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^9.6.2"
+  },
+  "devDependencies": {
+    "tsx": "^4.21.0",
+    "dotenv": "^17.4.2"
+  }
+}

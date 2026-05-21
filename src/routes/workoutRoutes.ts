@@ -1,0 +1,10 @@
+import { Router } from "express";
+import * as workoutController from "../controllers/workoutController.js";
+import { protect } from "../controllers/authController.js";
+export const workoutRouter = Router();
+workoutRouter.get("/", protect, workoutController.getWorkouts);
+workoutRouter.get("/:id", protect, workoutController.getWorkoutById);
+workoutRouter.post("/", protect, workoutController.postWorkout);
+workoutRouter.post("/:id/exercise", protect, workoutController.postExercises);
+workoutRouter.delete("/:id", protect, workoutController.deleteWorkout);
+workoutRouter.patch("/:id", protect, workoutController.updateWorkout);
