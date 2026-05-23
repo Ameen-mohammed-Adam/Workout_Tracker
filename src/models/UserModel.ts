@@ -21,7 +21,7 @@ export const UserSchema = new Schema<IUser>(
     },
     password: { type: String, required: [true, "password is required"] },
     role: { type: String, enum: ["admin", "user"], default: "user" },
-    progress_log: { type: Schema.Types.ObjectId, default: "" },
+    progress_log: { type: Schema.Types.ObjectId, ref: "Progress" },
   },
   {
     timestamps: true,

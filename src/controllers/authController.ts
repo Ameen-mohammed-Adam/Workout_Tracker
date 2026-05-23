@@ -10,12 +10,12 @@ export const register = catchAsync(async (req, res, next) => {
   if (!name || !password || !email) {
     return next(new AppError(400, "Please Provide name , password and emnail"));
   }
-  const user = await User.create({
+  await User.create({
     name,
     password,
     email,
   });
-  ResFunc(res, 201, user);
+  ResFunc(res, 201, "User Created.");
 });
 export const login = catchAsync(async (req, res, next) => {
   const { email, password } = req.body || 0;

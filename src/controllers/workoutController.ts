@@ -2,6 +2,7 @@ import { catchAsync } from "../middleware/catchAsync.js";
 import { ResFunc } from "../middleware/Response.js";
 import { Workout } from "../models/WorkoutModel.js";
 import { AppError } from "../utils/AppError.js";
+import { isValidObjectId } from "mongoose";
 
 export const getWorkouts = catchAsync(async (req, res, next) => {
   const user = req.user;
@@ -20,11 +21,17 @@ export const getWorkoutById = catchAsync(async (req, res, next) => {
   if (!workoutId) {
     return next(new AppError(400, "Missing workout id parameter."));
   }
-  const check = await Workout.findOne({ _id: workoutId, userID: user._id });
-  if (!check) {
+  if (!isValidObjectId(workoutId)) {
+    return next(new AppError(400, "Invalid workout id."));
+  }
+  const workout = await Workout.findOne({
+    _id: workoutId,
+    $or: [{ userID: user._id }, { allowedUsers: { $in: [user._id] } }],
+  });
+  if (!workout) {
     return next(new AppError(404, "Workout not found."));
   }
-  ResFunc(res, 200, check);
+  ResFunc(res, 200, workout);
 });
 export const postWorkout = catchAsync(async (req, res, next) => {
   const user = req.user;
@@ -56,7 +63,7 @@ export const updateWorkout = catchAsync(async (req, res, next) => {
   if (!workoutId) {
     return next(new AppError(400, "Missing workout id parameter."));
   }
-  const check = await Workout.findOneAndUpdate(
+  const workout = await Workout.findOneAndUpdate(
     {
       _id: workoutId,
       userID: user._id,
@@ -64,10 +71,10 @@ export const updateWorkout = catchAsync(async (req, res, next) => {
     updateData,
     { returnDocument: "after", runValidators: true },
   );
-  if (!check) {
+  if (!workout) {
     return next(new AppError(404, "Workout not found."));
   }
-  ResFunc(res, 200, check);
+  ResFunc(res, 200, workout);
 });
 export const postExercises = catchAsync(async (req, res, next) => {
   const user = req.user;
@@ -117,11 +124,11 @@ export const deleteWorkout = catchAsync(async (req, res, next) => {
   if (!workoutId) {
     return next(new AppError(400, "Missing workout id parameter."));
   }
-  const check = await Workout.findOneAndDelete({
+  const workout = await Workout.findOneAndDelete({
     _id: workoutId,
     userID: user._id,
   });
-  if (!check) {
+  if (!workout) {
     return next(new AppError(404, "Workout not found."));
   }
   ResFunc(res, 200, "Workout deleted successfully.");
